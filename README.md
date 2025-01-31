@@ -4,6 +4,10 @@
 
 - `axios-mock-adapter`を用いたモックの試作
 
+- 調査内容は以下のファイルを参照
+
+> documents/axios-mock-adapter_調査.md
+
 ## 環境
 
 - 以下の環境で試作・動作確認
