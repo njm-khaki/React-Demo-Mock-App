@@ -4,7 +4,12 @@ import { CountMock } from "./api/v1/count";
 import { SumMock } from "./api/v1/sum";
 import { UserMock } from "./api/v1/user";
 
+/**
+ * モックの起動
+ */
 export const mock = () => {
+
+    // axiosのモック　インスタンス生成
     const mockAxios = new MockAdapter(axios);
 
     CountMock(mockAxios);
