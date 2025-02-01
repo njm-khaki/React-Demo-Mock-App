@@ -9,7 +9,7 @@ import { UserMock } from "./api/v1/user";
  */
 export const mock = () => {
 
-    // axiosのモック　インスタンス生成
+    // axiosのモック インスタンス生成
     const mockAxios = new MockAdapter(axios);
 
     CountMock(mockAxios);
