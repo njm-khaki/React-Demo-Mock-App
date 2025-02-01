@@ -1,8 +1,17 @@
 # React Demo Mock App
 
+- [React Demo Mock App](#react-demo-mock-app)
+  - [概要](#概要)
+  - [環境](#環境)
+  - [環境構築・実行方法](#環境構築実行方法)
+
 ## 概要
 
 - `axios-mock-adapter`を用いたモックの試作
+
+- 調査内容は以下のファイルを参照
+
+> documents/axios-mock-adapter_調査.md
 
 ## 環境
 
