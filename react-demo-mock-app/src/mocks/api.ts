@@ -12,6 +12,7 @@ export const mock = () => {
     // axiosのモック インスタンス生成
     const mockAxios = new MockAdapter(axios);
 
+    // 各APIのモックを設定
     CountMock(mockAxios);
     SumMock(mockAxios);
     UserMock(mockAxios);
@@ -29,20 +30,33 @@ export const mock = () => {
  */
 export const parseDynamicMockPath = (path: string) => {
     // URLの末端が可変のときは正規表現で指定する必要はない
-    const trimedPath = path.replace(/:\w+$/, ``);
+    const trimmedPath = path.replace(/:\w+$/, ``);
 
     // 動的URLを指定しているなら正規表現で返却
-    return trimedPath.match(/:\w+/g)
+    return trimmedPath.match(/:\w+/g)
         // :から始まる文字列を置き換える
-        ? new RegExp(trimedPath.replace(/:\w+/g, `[^/]+`))
+        ? new RegExp(trimmedPath.replace(/:\w+/g, `[^/]+`))
         // 静的なURLは文字列で指定して設定する
-        : trimedPath
+        : trimmedPath
 }
 
-export const matchDynamicPathParameter = (path: string, url: string | undefined) => {
+/**
+ * 動的URLから可変値を抜き出す関数
+ * @param path APIのパス(文字列) {string}
+ * @param url 呼び出されたURL {string | undefined}
+ * @returns URLから抜き出した可変値
+ */
+export const matchDynamicPathParameter = (
+    path: string, 
+    url: string | undefined
+) => {
+    // 動的URLの記載ルールから
+    // 可変値を抜き出す正規表現を生成
     const pattern = path.replace(/:\w+$/, ``).replace(/:\w+/g, `([^/]+)`);
 
+    // 呼び出されたURLから可変値を抜き出す
     const params = url?.match(RegExp(pattern));
 
+    // 抜き出した値をリストにして返却
     return params?.slice(1) ?? []
 }
