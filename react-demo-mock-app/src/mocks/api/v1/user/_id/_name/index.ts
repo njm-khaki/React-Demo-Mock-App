@@ -1,30 +1,13 @@
+import { HttpStatusCode } from "axios";
 import MockAdapter from "axios-mock-adapter";
 import {
   matchDynamicPathParameter,
   parseDynamicMockPath,
 } from "../../../../../api";
-import { HttpStatusCode } from "axios";
+import { UserIdNamePostParams, UserIdNamePostResponseBody } from "./@types";
 
 // APIのパス
 const BASE_PATH = `api/v1/user/:id/:name`;
-
-/**
- * ユーザー名API POSTメソッド リクエストボディ
- */
-export interface UserIdNamePostParams {
-  // ユーザー名
-  name: string;
-}
-
-/**
- * ユーザー名API POSTメソッド レスポンスボディ
- */
-export interface UserIdNamePostResponse {
-  // ユーザーID
-  id: number;
-  // ユーザー名
-  name: string;
-}
 
 /**
  * ユーザー名API モック
@@ -49,10 +32,9 @@ export const UserIdNameMock = (mock: MockAdapter) => {
         {
           id: Number(id),
           name: params.name,
-        } as UserIdNamePostResponse,
+        } as UserIdNamePostResponseBody,
       ];
     } catch {
-      
       // パラメータの取得などに失敗したとき
       // 500エラーで対応
       return [HttpStatusCode.InternalServerError];

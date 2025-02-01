@@ -1,16 +1,9 @@
 import { HttpStatusCode } from "axios";
 import MockAdapter from "axios-mock-adapter";
+import { CountPostRequestBody } from "./@types";
 
 // APIのパス
 const BASE_PATH = `api/v1/count`;
-
-/**
- * api/v1/count
- * POSTメソッド リクエストボディ
- */
-export interface CountPostRequest {
-  value: number;
-}
 
 /**
  * カウントAPI モック
@@ -33,7 +26,7 @@ export const CountMock = (mock: MockAdapter) => {
 
     // リクエストボディをパースして
     // 受け取った値を保持しておく
-    const request = JSON.parse(config.data) as CountPostRequest;
+    const request = JSON.parse(config.data) as CountPostRequestBody;
     value = request.value;
 
     // 200 OKを返却

@@ -1,16 +1,9 @@
 import { HttpStatusCode } from "axios";
 import MockAdapter from "axios-mock-adapter";
+import { SumPostRequestBody } from "./@types";
 
 // APIのパス
 const BASE_PATH = `api/v1/sum`;
-
-/**
- * api/v1/sum
- * POSTメソッド リクエストボディ
- */
-export interface SumPostRequest {
-  value: number;
-}
 
 /**
  * 合計値算出API モック
@@ -34,7 +27,7 @@ export const SumMock = (mock: MockAdapter) => {
 
     // リクエストボディの値をパースして
     // 受け取った値を合計値に加算する
-    const request = JSON.parse(config.data) as SumPostRequest;
+    const request = JSON.parse(config.data) as SumPostRequestBody;
     value += request.value;
 
     // 200 OK

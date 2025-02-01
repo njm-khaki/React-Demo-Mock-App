@@ -3,14 +3,17 @@ import { useState } from "react";
 import "./App.css";
 import reactLogo from "./assets/react.svg";
 import { mock } from "./mocks/api";
-import { SumPostRequest } from "./mocks/api/v1/sum";
-import { CountPostRequest } from "./mocks/api/v1/count";
-import viteLogo from "/vite.svg";
-import { UserGetParams, UserGetResponse } from "./mocks/api/v1/user/_id";
+import { CountPostRequestBody } from "./mocks/api/v1/count/@types";
+import { SumPostRequestBody } from "./mocks/api/v1/sum/@types";
+import {
+  UserGetQueryParams,
+  UserGetResponseBody,
+} from "./mocks/api/v1/user/_id/@types";
 import {
   UserIdNamePostParams,
-  UserIdNamePostResponse,
-} from "./mocks/api/v1/user/_id/_name";
+  UserIdNamePostResponseBody,
+} from "./mocks/api/v1/user/_id/_name/@types";
+import viteLogo from "/vite.svg";
 
 console.log(`use mock: ${import.meta.env.VITE_APP_USE_MOCK}`);
 if (import.meta.env.VITE_APP_USE_MOCK === "true") {
@@ -40,7 +43,8 @@ function App() {
           onClick={async () => {
             await axios.post(`api/v1/count`, {
               value: Math.round(10 * Math.random()),
-            } as CountPostRequest);
+            } as CountPostRequestBody);
+
             const response = await axios.get(`api/v1/count`);
             setCount(response.data);
           }}
@@ -51,7 +55,7 @@ function App() {
           onClick={async () => {
             await axios.post(`api/v1/sum`, {
               value: count,
-            } as SumPostRequest);
+            } as SumPostRequestBody);
 
             const response = await axios.get(`api/v1/sum`);
             setSum(response.data);
@@ -64,10 +68,10 @@ function App() {
             const response = await axios.get(`api/v1/user/`, {
               params: {
                 id: count,
-              } as UserGetParams,
+              } as UserGetQueryParams,
             });
 
-            const data = response.data as UserGetResponse;
+            const data = response.data as UserGetResponseBody;
             setUserId(data.id);
           }}
         >
@@ -95,7 +99,7 @@ function App() {
             return;
           }
 
-          const data = response.data as UserIdNamePostResponse;
+          const data = response.data as UserIdNamePostResponseBody;
           alert(`sign up success!! your id: ${data.id} name: ${data.name}`);
         }}
       >
