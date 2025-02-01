@@ -1,29 +1,29 @@
-import MockAdapter from 'axios-mock-adapter'
+import MockAdapter from "axios-mock-adapter";
 import {
   matchDynamicPathParameter,
   parseDynamicMockPath,
-} from '../../../../../api'
-import { HttpStatusCode } from 'axios'
+} from "../../../../../api";
+import { HttpStatusCode } from "axios";
 
-const BASE_PATH = `api/v1/user/:id/:name`
+const BASE_PATH = `api/v1/user/:id/:name`;
 
 export interface UserIdNamePostParams {
-  name: string
+  name: string;
 }
 
 export interface UserIdNamePostResponse {
-  id: number
-  name: string
+  id: number;
+  name: string;
 }
 
 export const UserIdNameMock = (mock: MockAdapter) => {
   mock.onPost(parseDynamicMockPath(BASE_PATH)).reply((config) => {
-    console.log(`MOCK POST: ${BASE_PATH}`, config)
+    console.log(`MOCK POST: ${BASE_PATH}`, config);
 
     try {
-      const [id] = matchDynamicPathParameter(BASE_PATH, config.url)
+      const [id] = matchDynamicPathParameter(BASE_PATH, config.url);
 
-      const params = JSON.parse(config.data) as UserIdNamePostParams
+      const params = JSON.parse(config.data) as UserIdNamePostParams;
 
       return [
         HttpStatusCode.Ok,
@@ -31,9 +31,9 @@ export const UserIdNameMock = (mock: MockAdapter) => {
           id: Number(id),
           name: params.name,
         } as UserIdNamePostResponse,
-      ]
+      ];
     } catch {
-      return [HttpStatusCode.InternalServerError]
+      return [HttpStatusCode.InternalServerError];
     }
-  })
-}
+  });
+};

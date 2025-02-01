@@ -1,28 +1,28 @@
-import axios, { HttpStatusCode } from 'axios'
-import { useState } from 'react'
-import './App.css'
-import reactLogo from './assets/react.svg'
-import { mock } from './mocks/api'
-import { SumPostRequest } from './mocks/api/v1/sum'
-import { CountPostRequest } from './mocks/api/v1/count'
-import viteLogo from '/vite.svg'
-import { UserGetParams, UserGetResponse } from './mocks/api/v1/user/_id'
+import axios, { HttpStatusCode } from "axios";
+import { useState } from "react";
+import "./App.css";
+import reactLogo from "./assets/react.svg";
+import { mock } from "./mocks/api";
+import { SumPostRequest } from "./mocks/api/v1/sum";
+import { CountPostRequest } from "./mocks/api/v1/count";
+import viteLogo from "/vite.svg";
+import { UserGetParams, UserGetResponse } from "./mocks/api/v1/user/_id";
 import {
   UserIdNamePostParams,
   UserIdNamePostResponse,
-} from './mocks/api/v1/user/_id/_name'
+} from "./mocks/api/v1/user/_id/_name";
 
-console.log(`use mock: ${import.meta.env.VITE_APP_USE_MOCK}`)
-if (import.meta.env.VITE_APP_USE_MOCK === 'true') {
-  mock()
+console.log(`use mock: ${import.meta.env.VITE_APP_USE_MOCK}`);
+if (import.meta.env.VITE_APP_USE_MOCK === "true") {
+  mock();
 }
 
 function App() {
-  const [count, setCount] = useState(0)
-  const [sum, setSum] = useState(0)
+  const [count, setCount] = useState(0);
+  const [sum, setSum] = useState(0);
 
-  const [userId, setUserId] = useState(0)
-  const [userName, setUserName] = useState(``)
+  const [userId, setUserId] = useState(0);
+  const [userName, setUserName] = useState(``);
 
   return (
     <>
@@ -40,9 +40,9 @@ function App() {
           onClick={async () => {
             await axios.post(`api/v1/count`, {
               value: Math.round(10 * Math.random()),
-            } as CountPostRequest)
-            const response = await axios.get(`api/v1/count`)
-            setCount(response.data)
+            } as CountPostRequest);
+            const response = await axios.get(`api/v1/count`);
+            setCount(response.data);
           }}
         >
           count is {count}
@@ -51,10 +51,10 @@ function App() {
           onClick={async () => {
             await axios.post(`api/v1/sum`, {
               value: count,
-            } as SumPostRequest)
+            } as SumPostRequest);
 
-            const response = await axios.get(`api/v1/sum`)
-            setSum(response.data)
+            const response = await axios.get(`api/v1/sum`);
+            setSum(response.data);
           }}
         >
           sum is {sum}
@@ -65,10 +65,10 @@ function App() {
               params: {
                 id: count,
               } as UserGetParams,
-            })
+            });
 
-            const data = response.data as UserGetResponse
-            setUserId(data.id)
+            const data = response.data as UserGetResponse;
+            setUserId(data.id);
           }}
         >
           user id: {userId}
@@ -81,22 +81,22 @@ function App() {
         type="text"
         placeholder="input your name"
         onChange={(event) => {
-          setUserName(event.target.value)
+          setUserName(event.target.value);
         }}
       />
       <button
         onClick={async () => {
           const response = await axios.post(`api/v1/user/${userId}/`, {
             name: userName,
-          } as UserIdNamePostParams)
+          } as UserIdNamePostParams);
 
           if (response.status !== HttpStatusCode.Ok) {
-            alert(`sing up failed`)
-            return
+            alert(`sing up failed`);
+            return;
           }
 
-          const data = response.data as UserIdNamePostResponse
-          alert(`sign up success!! your id: ${data.id} name: ${data.name}`)
+          const data = response.data as UserIdNamePostResponse;
+          alert(`sign up success!! your id: ${data.id} name: ${data.name}`);
         }}
       >
         sign up
@@ -105,7 +105,7 @@ function App() {
         Click on the Vite and React logos to learn more
       </p>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
