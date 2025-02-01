@@ -7,11 +7,12 @@
     - [モックを起動する](#モックを起動する)
     - [API仕様に合わせてモックを実装する](#api仕様に合わせてモックを実装する)
     - [クエリパラメータを取得する](#クエリパラメータを取得する)
-    - [動的パスに対応する](#動的パスに対応する)
-  - [開発/本番環境用に使い分けをする](#開発本番環境用に使い分けをする)
+    - [動的URLに対応する](#動的urlに対応する)
   - [運用ルール](#運用ルール)
     - [パスの記載方法](#パスの記載方法)
     - [ディレクトリ構造](#ディレクトリ構造)
+    - [開発/本番環境用に使い分けをする](#開発本番環境用に使い分けをする)
+  - [参考情報](#参考情報)
 
 ## 概要
 
@@ -33,7 +34,7 @@ npm i axios-mock-adapter
 
 ```typescript
 // axiosのモック　インスタンス生成
-const mockAxios = new MockAdapter(axios);
+const mock = new MockAdapter(axios);
 ```
 
 ### API仕様に合わせてモックを実装する
@@ -45,7 +46,7 @@ const mockAxios = new MockAdapter(axios);
 
 ```typescript
 // GETメソッドで呼び出したときの動作
-mockAxios.onGet(`/api/path`).reply((config) => {
+mock.onGet(`/api/path`).reply((config) => {
 
     // APIの返却値
     // 以下のステータスコード、レスポンスボディとなる
@@ -61,32 +62,47 @@ mockAxios.onGet(`/api/path`).reply((config) => {
 });
 
 // POSTメソッドで呼び出したときの動作
-mockAxios.onPost(`/api/path`).reply((config) => {
+mock.onPost(`/api/path`).reply((config) => {
     // 両略
 });
 
 // PUTメソッドで呼び出したときの動作
-mockAxios.onPut(`/api/path`).reply((config) => {
+mock.onPut(`/api/path`).reply((config) => {
     // 省略
 });
 
 // DELETEメソッドで呼び出したときの動作
-mockAxios.onDelete(`/api/path`).reply((config) => {
+mock.onDelete(`/api/path`).reply((config) => {
     // 省略
 });
 ```
 
 ### クエリパラメータを取得する
 
-- 記載中
+- 以下の方法でクエリパラメータを取得する
+  - 用途ごとにインターフェースを定義してあげて型変換すると安全
 
-### 動的パスに対応する
+```typescript
+mock.onGet(`/api/path`).reply((config) => {
 
-- 記載中
+    // クエリパラメータを取得
+    // Any型なので用途に応じて型変換して用いる
+    const params = config.params as SomeParamsType;
+});
+```
 
-## 開発/本番環境用に使い分けをする
+### 動的URLに対応する
 
-- 記載中
+- 動的URLに対応する場合は正規表現を用いる
+
+```typescript
+// 以下のパスに対応する場合
+// /api/{variable path}/hoge
+mock.onGet(/\/api\/[^/]+\/hoge/).reply((config) => {
+    // URLに含まれる値を正規表現で抜き出す
+    const values = config.url.match(/\/api\/(.+)\/hoge/);
+});
+```
 
 ## 運用ルール
 
@@ -99,3 +115,13 @@ mockAxios.onDelete(`/api/path`).reply((config) => {
 ### ディレクトリ構造
 
 - 記載中
+
+### 開発/本番環境用に使い分けをする
+
+- 記載中
+
+## 参考情報
+
+- [React + TypeScriptでモックAPIを叩いてみる　〜axios-mockのAPIで固定値を取得〜](https://qiita.com/qq_kaq/items/efb3b41e3e5e2b862775)
+
+- [axios-mock-adapterで動的なurlのリクエストを取得する方法](https://qiita.com/Sue_chan/items/d73a4e3a4856046bc296)
