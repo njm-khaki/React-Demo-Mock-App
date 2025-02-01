@@ -5,6 +5,7 @@ import MockAdapter from "axios-mock-adapter";
 const BASE_PATH = `api/v1/count`;
 
 /**
+ * api/v1/count
  * POSTメソッド リクエストボディ
  */
 export interface CountPostRequest {
