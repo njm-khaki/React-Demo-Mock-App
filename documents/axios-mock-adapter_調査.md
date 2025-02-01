@@ -9,8 +9,8 @@
     - [クエリパラメータを取得する](#クエリパラメータを取得する)
     - [動的URLに対応する](#動的urlに対応する)
   - [運用ルール](#運用ルール)
+    - [ディレクトリ構成](#ディレクトリ構成)
     - [パスの記載方法](#パスの記載方法)
-    - [ディレクトリ構造](#ディレクトリ構造)
     - [開発/本番環境用に使い分けをする](#開発本番環境用に使い分けをする)
   - [参考情報](#参考情報)
 
@@ -33,7 +33,7 @@ npm i axios-mock-adapter
 - インスタンスを生成することでモックを起動する
 
 ```typescript
-// axiosのモック　インスタンス生成
+// axiosのモック インスタンス生成
 const mock = new MockAdapter(axios);
 ```
 
@@ -106,19 +106,82 @@ mock.onGet(/\/api\/[^/]+\/hoge/).reply((config) => {
 
 ## 運用ルール
 
-- 記載中
+- 運用ルールについて検討したのでメモ
+
+### ディレクトリ構成
+
+- APIのパスをディレクトリに見立てて配置すると管理し易そう
+  - 動的URLの場合は`_id`など区別できるようにしておくと分かりやすそう
+
+```text
+api/v1/user
+api/v1/login
+api/v1/logout
+api/v2/user
+
+mocks
+└─api
+  ├─v1
+  │ ├─user
+  │ ├─login
+  │ └─logout
+  └─v2
+    └─user
+```
 
 ### パスの記載方法
 
-- 記載中
+- 動的URLに対応するごとに正規表現を書いていると効率が悪い
+  - なのでパスの記載ルールを決めておく
+  - パスは文字列で記載する
+  - 動的URLの場合は正規表現に変換するようにしておく
 
-### ディレクトリ構造
+- 記載ルールを設けて文字列から設定できるような関数を用意しておく
+  - 以下は文字列から設定用の値に変換する関数の実装例
 
-- 記載中
+```typescript
+/**
+ * モックするURL
+ * 静的/動的URLに応じたパスを返却
+ * 動的URLの記載ルール
+    * 可変部分は`:`から始まる文字列を割り当てる
+    * 例 idの部分が可変
+    * `api/:id/user`
+ * @param path APIのパス(文字列) {string}
+ * @returns モックに設定するパス {string | RegExp} 
+ */
+export const parseDynamicMockPath = (path: string) => {
+    // URLの末端が可変のときは正規表現で指定する必要はない
+    const trimedPath = path.replace(/:\w+$/, ``);
+
+    // 動的URLを指定しているなら正規表現で返却
+    return trimedPath.match(/:\w+/g)
+        // :から始まる文字列を置き換える
+        ? new RegExp(trimedPath.replace(/:\w+/g, `[^/]+`))
+        // 静的なURLは文字列で指定して設定する
+        : trimedPath
+}
+
+// :idの部分が可変になるようにモックを設定
+mock.onGet(parseDynamicMockPath(`api/:id/hoge`)).reply((config) => {
+    // URLに含まれる値を正規表現で抜き出す
+    const values = config.url.match(/\/api\/(.+)\/hoge/);
+});
+```
 
 ### 開発/本番環境用に使い分けをする
 
-- 記載中
+- 環境変数を参照してモックのインスタンスを生成するか場合分けする
+  - ソースコードに差分を出さずにモック/REST APIを切り替えることができる
+
+```typescript
+// モックを利用するか環境変数を参照
+// App.tsxなどで呼び出せばOK
+if (import.meta.env.VITE_APP_USE_MOCK === "true") {
+  // axiosのモック インスタンス生成
+  const mock = new MockAdapter(axios);
+}
+```
 
 ## 参考情報
 
