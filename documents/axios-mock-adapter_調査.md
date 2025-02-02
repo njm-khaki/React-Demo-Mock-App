@@ -152,14 +152,14 @@ mocks
  */
 export const parseDynamicMockPath = (path: string) => {
     // URLの末端が可変のときは正規表現で指定する必要はない
-    const trimedPath = path.replace(/:\w+$/, ``);
+    const trimmedPath = path.replace(/:\w+$/, ``);
 
     // 動的URLを指定しているなら正規表現で返却
-    return trimedPath.match(/:\w+/g)
+    return trimmedPath.match(/:\w+/g)
         // :から始まる文字列を置き換える
-        ? new RegExp(trimedPath.replace(/:\w+/g, `[^/]+`))
+        ? new RegExp(trimmedPath.replace(/:\w+/g, `[^/]+`))
         // 静的なURLは文字列で指定して設定する
-        : trimedPath
+        : trimmedPath
 }
 
 // :idの部分が可変になるようにモックを設定

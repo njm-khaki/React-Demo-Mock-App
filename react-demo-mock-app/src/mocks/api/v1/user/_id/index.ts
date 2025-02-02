@@ -1,33 +1,34 @@
 import { HttpStatusCode } from "axios";
 import MockAdapter from "axios-mock-adapter";
 import { parseDynamicMockPath } from "../../../../api";
+import { UserGetQueryParams, UserGetResponseBody } from "./@types";
 import { UserIdNameMock } from "./_name";
 
-const BASE_PATH = `api/v1/user/:id`; 
+// APIのパス
+const BASE_PATH = `api/v1/user/:id`;
 
-export interface UserGetParams {
-    id: number;
-}
-
-export interface UserGetResponse {
-    id: number;
-    name: string;
-}
-
+/**
+ * ユーザーID API モック
+ * @param mock
+ */
 export const UserIdMock = (mock: MockAdapter) => {
-    UserIdNameMock(mock);
+  // ユーザー名API モック
+  UserIdNameMock(mock);
 
-    mock.onGet(parseDynamicMockPath(BASE_PATH)).reply((config) => {
-        console.log(`MOCK GET: ${BASE_PATH}`, config);
+  // GETメソッド
+  mock.onGet(parseDynamicMockPath(BASE_PATH)).reply((config) => {
+    console.log(`MOCK GET: ${BASE_PATH}`, config);
 
-        const params = config.params as UserGetParams;
+    // クエリパラメータを取得
+    const params = config.params as UserGetQueryParams;
 
-        return [
-            HttpStatusCode.Ok, 
-            {
-                id: params.id,
-                name: `user${params.id}`
-            } as UserGetResponse,
-        ];
-    });
-}
+    // ユーザー情報を返却
+    return [
+      HttpStatusCode.Ok,
+      {
+        id: params.id,
+        name: `user${params.id}`,
+      } as UserGetResponseBody,
+    ];
+  });
+};

@@ -1,24 +1,36 @@
 import { HttpStatusCode } from "axios";
 import MockAdapter from "axios-mock-adapter";
+import { SumPostRequestBody } from "./@types";
 
-const BASE_PATH = `api/v1/sum`
+// APIのパス
+const BASE_PATH = `api/v1/sum`;
 
-export interface SumPostRequest {
-    value: number;
-}
-
+/**
+ * 合計値算出API モック
+ * @param mock
+ */
 export const SumMock = (mock: MockAdapter) => {
-    let value: number = 0;
+  // POSTされた値の合計値を保持
+  let value: number = 0;
 
-    mock.onGet(BASE_PATH).reply((config) => {
-        console.log(`MOCK GET: ${BASE_PATH}`, config);
-        return [HttpStatusCode.Ok, value];
-    });
+  // GETメソッド
+  mock.onGet(BASE_PATH).reply((config) => {
+    console.log(`MOCK GET: ${BASE_PATH}`, config);
 
-    mock.onPost(BASE_PATH).reply((config) => {
-        console.log(`MOCK POST: ${BASE_PATH}`, config);
-        const request = JSON.parse(config.data) as SumPostRequest;
-        value += request.value;
-        return [HttpStatusCode.Ok];
-    });
-}
+    // POSTされた値の合計値を返却
+    return [HttpStatusCode.Ok, value];
+  });
+
+  // POSTメソッド
+  mock.onPost(BASE_PATH).reply((config) => {
+    console.log(`MOCK POST: ${BASE_PATH}`, config);
+
+    // リクエストボディの値をパースして
+    // 受け取った値を合計値に加算する
+    const request = JSON.parse(config.data) as SumPostRequestBody;
+    value += request.value;
+
+    // 200 OK
+    return [HttpStatusCode.Ok];
+  });
+};

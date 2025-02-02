@@ -1,6 +1,11 @@
 import MockAdapter from "axios-mock-adapter";
 import { UserIdMock } from "./_id";
 
+/**
+ * ユーザーAPI モック
+ * @param mock
+ */
 export const UserMock = (mock: MockAdapter) => {
-    UserIdMock(mock)
-}
+  // ユーザーID APIのモック
+  UserIdMock(mock);
+};
