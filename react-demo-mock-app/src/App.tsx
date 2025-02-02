@@ -21,10 +21,14 @@ if (import.meta.env.VITE_APP_USE_MOCK === "true") {
 }
 
 function App() {
+  // カウント値
   const [count, setCount] = useState(0);
+  // カウントした値の合計値
   const [sum, setSum] = useState(0);
 
+  // ユーザーID
   const [userId, setUserId] = useState(0);
+  // ユーザー名
   const [userName, setUserName] = useState(``);
 
   return (
@@ -39,32 +43,41 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
+        {/* カウント値 ボタン */}
         <button
           onClick={async () => {
+            // 適当な値をPOSTする
             await axios.post(`api/v1/count`, {
               value: Math.round(10 * Math.random()),
             } as CountPostRequestBody);
 
+            // POSTした値を受け取ってカウント値として更新
             const response = await axios.get(`api/v1/count`);
             setCount(response.data);
           }}
         >
           count is {count}
         </button>
+        {/* 合計値 ボタン */}
         <button
           onClick={async () => {
+            // カウント値をPOSTする
             await axios.post(`api/v1/sum`, {
               value: count,
             } as SumPostRequestBody);
 
+            // 現在の合計値を取得して更新
             const response = await axios.get(`api/v1/sum`);
             setSum(response.data);
           }}
         >
           sum is {sum}
         </button>
+        {/* ユーザーID ボタン */}
         <button
           onClick={async () => {
+            // カウント値をIDとしたユーザーの情報を取得
+            // 取得したユーザーのIDを更新
             const response = await axios.get(`api/v1/user/`, {
               params: {
                 id: count,
@@ -88,17 +101,22 @@ function App() {
           setUserName(event.target.value);
         }}
       />
+      {/* サインアップ ボタン */}
       <button
         onClick={async () => {
+          // ユーザー情報を登録
           const response = await axios.post(`api/v1/user/${userId}/`, {
             name: userName,
-          } as UserIdNamePostParams);
+          } as UserIdNamePostParams)
+          .catch((_) => { return null });
 
-          if (response.status !== HttpStatusCode.Ok) {
+          // 200 OK以外のときはアラート表示して終了
+          if (response?.status !== HttpStatusCode.Ok) {
             alert(`sing up failed`);
             return;
           }
 
+          // 登録したユーザー情報を表示
           const data = response.data as UserIdNamePostResponseBody;
           alert(`sign up success!! your id: ${data.id} name: ${data.name}`);
         }}

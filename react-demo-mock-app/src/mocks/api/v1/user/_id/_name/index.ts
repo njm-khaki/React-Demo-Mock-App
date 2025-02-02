@@ -25,6 +25,12 @@ export const UserIdNameMock = (mock: MockAdapter) => {
       // 設定するユーザー名を取得
       const params = JSON.parse(config.data) as UserIdNamePostParams;
 
+      // ユーザーが入力されていない場合は
+      // 登録せず400エラーとする
+      if (params.name === ``) {
+        return [HttpStatusCode.BadRequest];
+      }
+
       // 200 OK
       // 設定したユーザー情報を返却
       return [
